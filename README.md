@@ -179,12 +179,14 @@ Kubernetes 1.24+
 
 ### High Level Architecture
 
-![alt text](image.png)
+<img width="1166" alt="image" src="https://github.com/user-attachments/assets/151b56fb-602a-4837-ba6d-54dc40c045d6" />
+
 
 ### Component & Instructions
 
-![alt text](image-1.png)
+<img width="1025" alt="image" src="https://github.com/user-attachments/assets/b0922b62-5659-4a93-9264-bd71d7d9457b" />
+
 
 ### Entity Relationship Diagram
+<img width="531" alt="image" src="https://github.com/user-attachments/assets/f0682564-075c-489f-ac46-4f1076f25252" />
 
-![alt text](image-2.png)
