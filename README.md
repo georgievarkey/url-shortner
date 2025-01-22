@@ -28,7 +28,7 @@ PostgreSQL
 
 ###  Clone repository
 ```
-git clone https://github.com/yourusername/url-shortener.git
+git clone https://github.com/georgievarkey/url-shortener.git
 ```
 ### Install dependencies
 ```
