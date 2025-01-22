@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: url-shortener
+  namespace: url-shortener
+  labels:
+    app: url-shortener
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+    - name: grpc
+      port: 5000
+      targetPort: grpc
+      protocol: TCP
+  selector:
+    app: url-shortener

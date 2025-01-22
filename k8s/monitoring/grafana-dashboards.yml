@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: monitoring
+data:
+  url-shortener-overview.json: |
+    {
+      "title": "URL Shortener Overview",
+      "rows": [
+        {
+          "title": "Request Statistics",
+          "panels": [
+            {
+              "title": "Request Rate",
+              "type": "graph",
+              "targets": [
+                {
+                  "expr": "sum(rate(http_request_duration_seconds_count[5m])) by (status)",
+                  "legendFormat": "{{status}}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }

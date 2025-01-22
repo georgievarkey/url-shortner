@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package urlshortener;
+
+service UrlShortener {
+  rpc CreateShortUrl (CreateUrlRequest) returns (UrlResponse);
+  rpc GetUrl (GetUrlRequest) returns (UrlResponse);
+  rpc DeactivateUrl (DeactivateUrlRequest) returns (DeactivateUrlResponse);
+}
+
+message CreateUrlRequest {
+  string long_url = 1;
+  optional string expires_at = 2;
+}
+
+message GetUrlRequest {
+  string short_url = 1;
+}
+
+message UrlResponse {
+  string short_url = 1;
+  string long_url = 2;
+  string created_at = 3;
+  optional string expires_at = 4;
+  int64 click_count = 5;
+  bool is_active = 6;
+}
+
+message DeactivateUrlRequest {
+  string short_url = 1;
+}
+
+message DeactivateUrlResponse {
+  bool success = 1;
+}

@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String       @id @default(cuid())
+  email     String       @unique
+  password  String
+  name      String?
+  role      String       @default("USER")
+  createdAt DateTime     @default(now())
+  urls      UrlMapping[]
+}
+
+model UrlMapping {
+  id          String         @id @default(cuid())
+  shortUrl    String         @unique
+  longUrl     String
+  userId      String?
+  user        User?          @relation(fields: [userId], references: [id])
+  createdAt   DateTime       @default(now())
+  expiresAt   DateTime?
+  clickCount  Int            @default(0)
+  isActive    Boolean        @default(true)
+  analytics   UrlAnalytics[]
+
+  @@map("url_mappings")
+}
+
+model UrlAnalytics {
+  id           String     @id @default(cuid())
+  urlMappingId String
+  urlMapping   UrlMapping @relation(fields: [urlMappingId], references: [id])
+  clickedAt    DateTime   @default(now())
+  referrer     String?
+  userAgent    String?
+  ipAddress    String?
+
+  @@map("url_analytics")
+}

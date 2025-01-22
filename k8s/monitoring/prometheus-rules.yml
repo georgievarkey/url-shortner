@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: monitoring
+data:
+  alerts.yml: |
+    groups:
+      - name: url-shortener
+        rules:
+          - alert: HighErrorRate
+            expr: |
+              sum(rate(http_request_duration_seconds_count{status=~"5.."}[5m]))
+              /
+              sum(rate(http_request_duration_seconds_count[5m])) > 0.05
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: High Error Rate
+              description: Error rate is above 5% for the last 5 minutes
+
+          - alert: HighLatency
+            expr: |
+              histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 1
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: High Latency
+              description: 95th percentile latency is above 1 second for the last 5 minutes
+
+          - alert: HighCPUUsage
+            expr: |
+              sum(rate(process_cpu_seconds_total[5m])) > 0.8
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: High CPU Usage
+              description: CPU usage is above 80% for the last 5 minutes
+
+          - alert: HighMemoryUsage
+            expr: |
+              process_resident_memory_bytes / process_heap_bytes > 0.8
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: High Memory Usage
+              description: Memory usage is above 80% for the last 5 minutes
+
+          - alert: RedisDown
+            expr: |
+              redis_up == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: Redis is down
+              description: Redis instance has been down for more than 1 minute
+
+          - alert: PostgresDown
+            expr: |
+              pg_up == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: PostgreSQL is down
+              description: PostgreSQL instance has been down for more than 1 minute

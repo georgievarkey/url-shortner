@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: database-backup
+spec:
+  schedule: "0 2 * * *"  # Run at 2 AM daily
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: backup
+              image: postgres:14
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  BACKUP_FILE="/backup/postgres_$(date +%Y%m%d_%H%M%S).dump"
+                  pg_dump -h postgresql -U $POSTGRES_USER -d urlshortener -F c -f $BACKUP_FILE
+                  # Upload to object storage
+                  aws s3 cp $BACKUP_FILE s3://$BACKUP_BUCKET/
+              env:
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgresql-secret
+                      key: username
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgresql-secret
+                      key: password
+                - name: BACKUP_BUCKET
+                  value: "url-shortener-backups"
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: aws-secret
+                      key: access-key
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: aws-secret
+                      key: secret-key
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+          volumes:
+            - name: backup
+              emptyDir: {}
+          restartPolicy: OnFailure

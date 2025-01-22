@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: url-shortener-config
+  namespace: url-shortener
+data:
+  app.config.json: |
+    {
+      "rateLimiting": {
+        "ttl": 60,
+        "limit": 100
+      },
+      "cors": {
+        "enabled": true,
+        "origin": ["https://url-shortener.example.com"]
+      },
+      "security": {
+        "jwtExpiresIn": "24h",
+        "bcryptSaltRounds": 10
+      }
+    }

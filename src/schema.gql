@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUrlInput {
+  expiresAt: DateTime
+  longUrl: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  createUrl(input: CreateUrlInput!): Url!
+  deleteUrl(shortUrl: String!): Boolean!
+}
+
+type Query {
+  resolveUrl(shortUrl: String!): String!
+  url(shortUrl: String!): Url
+  urls: [Url!]!
+}
+
+type Url {
+  clickCount: Float!
+  createdAt: DateTime!
+  expiresAt: DateTime
+  id: ID!
+  isActive: Boolean!
+  longUrl: String!
+  shortUrl: String!
+  userId: String
+}
